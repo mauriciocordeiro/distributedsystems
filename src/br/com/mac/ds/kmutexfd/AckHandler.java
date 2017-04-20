@@ -16,7 +16,7 @@ public class AckHandler extends Thread {
 	@Override
 	public void run() {
 		
-		process.initCount--;
+		process.ackCount--;
 		process.getFd().getFaultyS().remove(KMain.network[Integer.parseInt(message.getPayload())]);
 		
 	}

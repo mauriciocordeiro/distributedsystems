@@ -23,7 +23,7 @@ public class SenderUDP extends Thread {
 			
 //			System.out.println(process.getProcessId()+" sending "+Message.messageTypes[message.getType()]);
 			
-			DatagramPacket pckt = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("127.0.0.1"), message.getDestinationPort());
+			DatagramPacket pckt = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(process.getIp()), message.getDestinationPort());
 			DatagramSocket socket = new DatagramSocket();
 			socket.send(pckt);
 			

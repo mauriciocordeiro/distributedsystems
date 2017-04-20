@@ -23,7 +23,7 @@ public class Process extends Node {
 	
 	private FaultDetector fd;
 	
-	public int initCount = 0;
+	public int ackCount = 0;
 	
 	public static final int NOT_REQUESTING = 0;
 	public static final int REQUESTING = 1;
@@ -54,7 +54,7 @@ public class Process extends Node {
 		
 		fd = new FaultDetector(this);
 		
-		initCount = KMain.TOTAL_PROCESS;
+		ackCount = KMain.TOTAL_PROCESS;
 	}
 
 	public int getProcessId() {
@@ -154,7 +154,7 @@ public class Process extends Node {
 			
 			sendInit();
 			
-			while(initCount>0); 
+			while(ackCount>0); 
 			
 			System.out.println(id+" is no longer waiting ACK");
 			
