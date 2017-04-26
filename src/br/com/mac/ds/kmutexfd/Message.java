@@ -16,7 +16,11 @@ public class Message implements Serializable {
 	public static final int INIT = 3;
 	public static final int ACK = 4;
 	public static final int CRASH = 5;
-	public static final String[] messageTypes = {"", "REQUEST", "REPLY", "INIT", "ACK", "CRASH"};
+	
+	public static final int KNOCK_KNOCK = 6;
+	public static final int WHO_IS_THERE = 7;
+	
+	public static final String[] messageTypes = {"", "REQUEST", "REPLY", "INIT", "ACK", "CRASH", "KNOCK_KNOCK", "WHO_IS_THERE"};
 	
 	private Integer type;
 	private Integer processId;

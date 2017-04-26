@@ -17,7 +17,7 @@ public class KMain {
 	public static HashMap<Integer, Integer> portTable = new HashMap<>();
 	
 	public static Process[] network; // all process
-	public static int[] idFault = {4}; // faulty ids
+	public static int[] idFault = {3, 4}; // faulty ids
 
 	public static void main(String[] args) {
 		network = new Process[TOTAL_PROCESS];

@@ -18,7 +18,7 @@ public class ReplyHandler extends Thread {
 		try {
 			
 			Process pOrigin = KMain.network[message.getProcessId()];
-			System.out.println(process.getProcessId()+" receive REPLY from "+pOrigin.getProcessId());
+			//System.out.println(process.getProcessId()+" receive REPLY from "+pOrigin.getProcessId());
 			if(!process.getCrashed().contains(pOrigin)) {
 				int[] rc = process.getReplyCount();
 				

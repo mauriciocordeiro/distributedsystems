@@ -36,6 +36,12 @@ public class DatagramHandler extends Thread {
 				case Message.CRASH:
 					new CrashHandler(process, msg).start();
 					break;
+				case Message.KNOCK_KNOCK:
+					new KnockKnockHandler(process, msg).start();
+					break;
+				case Message.WHO_IS_THERE:
+					new WhoIsThereHandler(process, msg).start();
+					break;
 			}
 			
 		} catch (Exception e) {

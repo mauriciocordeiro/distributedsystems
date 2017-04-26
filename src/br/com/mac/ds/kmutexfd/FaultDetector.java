@@ -10,6 +10,8 @@ public class FaultDetector extends Thread {
 	private ArrayList<Process> faultyS;
 	private ArrayList<Process> faultyT;
 	
+	private int[] knockCount;
+	
 	public FaultDetector(Process process) {
 		super();
 		this.process = process;
@@ -19,6 +21,8 @@ public class FaultDetector extends Thread {
 		for(Process p : KMain.network) {
 			faultyS.add(p);
 		}
+		
+		knockCount = new int[KMain.TOTAL_PROCESS];
 	}
 	
 	public FaultDetector() {}
@@ -29,6 +33,14 @@ public class FaultDetector extends Thread {
 
 	public void setFaultyS(ArrayList<Process> faultyS) {
 		this.faultyS = faultyS;
+	}
+
+	public int[] getKnockCount() {
+		return knockCount;
+	}
+
+	public void setKnockCount(int[] knockCount) {
+		this.knockCount = knockCount;
 	}
 
 	public boolean isFaulty(Process p) {
@@ -48,16 +60,28 @@ public class FaultDetector extends Thread {
 		try {
 			
 			while(true) {
-				//Thread.sleep(1000);
+				Thread.sleep(500);
+				
+				for(int i=0; i<knockCount.length; i++) {
+					if(knockCount[i]==1) {
+						Process p = KMain.network[i];
+						add(p);
+						
+						if(process.getTrusted().contains(p) && isFaulty(p)) {
+							process.removeTrusted(p);
+							
+							sendCrash(p);
+						}
+						
+					}
+				}
 				
 				for(Process p : KMain.network) {
-					if(p.getState()==Thread.State.WAITING)
-						add(p);
-					
-					if(process!=p && process.getTrusted().contains(p) && isFaulty(p)) {
-						process.removeTrusted(p);
+					if(process!=p && !process.getCrashed().contains(p)) {
+						Message knock = new Message(Message.KNOCK_KNOCK, process.getProcessId(), process.getLast(), process.getPort(), p.getPort(), "");
+						new SenderUDP(process, knock).start();
 						
-						sendCrash(p);
+						knockCount[p.getProcessId()] = 1;
 					}
 				}
 			}
@@ -71,7 +95,7 @@ public class FaultDetector extends Thread {
 	private void sendCrash(Process crashed) {
 		
 		Message crash = new Message(Message.CRASH, process.getProcessId(), process.getH(), process.getPort(), 0, Integer.toString(crashed.getProcessId()));
-		System.out.println(process.getProcessId()+" sending "+crashed.getProcessId()+" CRASH...");
+		System.err.println(process.getProcessId()+" sending "+crashed.getProcessId()+" CRASH...");
 		for(Process pDestination : KMain.network) {
 			if(!process.getCrashed().contains(pDestination) && process!=pDestination) {
 				crash.setDestinationPort(pDestination.getPort());
