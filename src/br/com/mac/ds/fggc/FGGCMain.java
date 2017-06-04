@@ -1,25 +1,18 @@
-package br.com.mac.ds.kmutexfd;
+package br.com.mac.ds.fggc;
 
 import java.util.HashMap;
+import java.util.Random;
 
-public class KMain {
+public class FGGCMain {
 	
 	public static final int TOTAL_PROCESS = 5;
-	public static final int TOTAL_RESOURCE = 2;
-	
-	@Deprecated
-	public static final String MC_GROUP_IP = "224.2.2.2"; //ip do grupo de multicast
-	@Deprecated
-	public static final int DEFAULT_PORT = 7890; //porta padrão do grupo
-	@Deprecated
-	public static final int TTL = 1;
-	
 	public static HashMap<Integer, Integer> portTable = new HashMap<>();
 	
 	public static Process[] network; // all process
-	public static int[] idFault = {0,1,2}; // faulty ids
+	public static int[] idFault = {}; // faulty ids
 
 	public static void main(String[] args) {
+		
 		network = new Process[TOTAL_PROCESS];
 		
 		for (int i=0; i<TOTAL_PROCESS; i++) {
@@ -27,16 +20,21 @@ public class KMain {
 			portTable.put(i, (7891+i));
 			network[i].setPort(portTable.get(i));
 			network[i].setIp("127.0.0.1");
-//			network[i].start();
-			
 		}
+		
+		network[new Random().nextInt(TOTAL_PROCESS)].setType(Process.PROPOSER);
 		
 		for(Process p : network)
 			p.start();
-	}
-	
-	public static int max(int a, int b) {
-		return (a>b ? a : b);
+
+//		try {
+//			while(true) {
+//				
+//				
+//				Thread.sleep(2000);
+//			}
+//		} catch (Exception e) { }
+
 	}
 
 }

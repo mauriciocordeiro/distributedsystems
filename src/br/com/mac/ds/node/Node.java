@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
-import br.org.mac.midgard.util.List;
-
 /**
  * 
  * @author Maurício

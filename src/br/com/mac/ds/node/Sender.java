@@ -1,14 +1,9 @@
 package br.com.mac.ds.node;
 
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import javax.swing.plaf.ListUI;
-
 import br.com.mac.ds.main.Main;
-import br.org.mac.midgard.util.List;
 
 public class Sender extends Thread {
 	
