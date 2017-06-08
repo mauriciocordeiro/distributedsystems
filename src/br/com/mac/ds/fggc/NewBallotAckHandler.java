@@ -20,13 +20,13 @@ public class NewBallotAckHandler extends Thread {
 			
 			Process p = FGGCMain.network[message.getProcessId()];
 			
-			process.getLearners().remove(p);
+			//process.getLearners().remove(p);
 			p.setType(Process.ACCEPTOR);
 			process.getAcceptors().add(p);
 			
-			System.out.println(p.getPid()+" joins ballot "+process.getBalnum());
+			System.out.println(process.getBalnum()+"-> "+p.getPid()+" joins ballot "+process.getBalnum()+" from "+process.getPid());
 			
-			process.propose();
+//			process.propose();
 			
 		} catch (Exception e) { }
 		

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import br.com.mac.ds.node.Node;
-import br.org.mac.midgard.util.List;
 
 public class Process extends Node {
 	
@@ -43,8 +42,6 @@ public class Process extends Node {
 		
 		proposeCount = new int[FGGCMain.TOTAL_PROCESS];
 		cleanProposeCount();
-		
-		
 	}
 
 	public Integer getPid() {
@@ -123,27 +120,22 @@ public class Process extends Node {
 	public void run() {
 		new ReceiverUDP(this).start();
 		try {
+			Thread.sleep(pid*1000);
 			
-			if(type==PROPOSER) {
-				System.out.println("..:: "+pid+" is the PROPOSER ::..");
-				newBalNum();
-			}
-			else if(type==ACCEPTOR) {
-				
-			}
-			else if(type==LEARNER) {
-				
-			}
-			
+			newBalNum();
 		}
 		catch(Exception e) { }
 	}
 	
 	
 	
-	public void newBalNum() throws Exception {
+	public synchronized void newBalNum() throws Exception {
 		cleanProposeCount();
 		balnum++;
+		
+		System.out.println("--------------------------------");
+		System.out.println("..:: Ballot "+balnum+"\tby "+pid+" ::..");
+		System.out.println("--------------------------------");
 		
 		String payload = Integer.toString(balnum);
 		
@@ -151,36 +143,35 @@ public class Process extends Node {
 		
 		for (Process process : FGGCMain.network) {
 			if(process!=this) {
-				System.out.println(pid+" sending NEW_BALLOT to "+process.getPid());
+				System.out.println(balnum+"-> "+pid+" sending NEW_BALLOT to "+process.getPid());
 				msgPropose.setDestinationPort(process.getPort());
 				new SenderUDP(this, msgPropose).start();
 				
-				process.setType(Process.LEARNER);
+//				process.setType(Process.LEARNER);
 				learners.add(process);
 				
 				Thread.sleep(1000);
 			}
 		}
 		
-//		System.out.print("Leaners: |");
-//		for (Process p : getLearners())
-//			System.out.print(p.getPid()+"|");
-//		System.out.println();
+		while(!hasMajorityClassic());
+		
+		propose();
 		
 	}
 	
-	public synchronized void propose() throws Exception {
-		if(!hasMajority())
-			return;
+	public void propose() throws Exception {
 		
 		value = new Random().nextInt(10);
 		String payload = balnum+","+value;
 		
-		Message msgPropose = new Message(Message.PROPOSE, pid, getPort(), null, payload);
 		for (Process acceptor : acceptors) {
+			Message msgPropose = new Message(Message.PROPOSE, pid, getPort(), null, payload);
 			msgPropose.setDestinationPort(acceptor.getPort());
 			new SenderUDP(this, msgPropose).start();
 			proposeCount[acceptor.getPid()] = 1;
+			
+			System.out.println(balnum+"-> "+pid+" Sending propose to "+acceptor.getPid());
 		}
 	}
 	
@@ -192,8 +183,12 @@ public class Process extends Node {
 		return false;
 	}
 	
-	private boolean hasMajority() {
+	private boolean hasMajorityClassic() {
 		return (acceptors.size() >= (FGGCMain.TOTAL_PROCESS/2)+1);
+	}
+	
+	private boolean hasMajorityFast() {
+		return (acceptors.size() >= (3*FGGCMain.TOTAL_PROCESS)/4);
 	}
 	
 	private void cleanProposeCount() {

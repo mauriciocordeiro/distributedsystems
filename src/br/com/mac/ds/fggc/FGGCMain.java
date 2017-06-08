@@ -5,11 +5,11 @@ import java.util.Random;
 
 public class FGGCMain {
 	
-	public static final int TOTAL_PROCESS = 5;
+	public static final int TOTAL_PROCESS = 10;
 	public static HashMap<Integer, Integer> portTable = new HashMap<>();
 	
 	public static Process[] network; // all process
-	public static int[] idFault = {}; // faulty ids
+	public static int[] idFault = {0,5,7}; // faulty ids
 
 	public static void main(String[] args) {
 		
@@ -20,20 +20,13 @@ public class FGGCMain {
 			portTable.put(i, (7891+i));
 			network[i].setPort(portTable.get(i));
 			network[i].setIp("127.0.0.1");
+			network[i].setType(Process.PROPOSER);
 		}
 		
-		network[new Random().nextInt(TOTAL_PROCESS)].setType(Process.PROPOSER);
+//		network[new Random().nextInt(TOTAL_PROCESS)].setType(Process.PROPOSER);
 		
 		for(Process p : network)
 			p.start();
-
-//		try {
-//			while(true) {
-//				
-//				
-//				Thread.sleep(2000);
-//			}
-//		} catch (Exception e) { }
 
 	}
 

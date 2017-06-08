@@ -19,17 +19,18 @@ public class ProposeAckHandler extends Thread {
 		try {
 			process.getProposeCount()[message.getProcessId()] = 0;
 			
-			System.out.println("\t"+message.getProcessId()+" accepts value "+process.getValue()+" from ballot "+process.getBalnum());
-					
-			
 			if(process.hasPendingPropose())
 				return;
 			
-			Message msg = new Message(Message.LEARN, process.getPid(), process.getPort(), null, Integer.toString(process.getValue()));
-			for (Process learner : process.getLearners()) {
-				msg.setDestinationPort(learner.getPort());
-				new SenderUDP(process, msg).start();
-			}
+			//if(process.getType()==Process.PROPOSER) {
+				String payload = process.getBalnum()+","+process.getValue();
+				for (Process learner : process.getLearners()) {
+					Message msg = new Message(Message.LEARN, process.getPid(), process.getPort(), null, payload);
+					msg.setDestinationPort(learner.getPort());
+					new SenderUDP(process, msg).start();
+//					System.out.println(process.getPid()+" sends LEARN to "+learner.getPid());
+				}
+			//}
 			
 		} catch (Exception e) {
 			e.printStackTrace(System.err);

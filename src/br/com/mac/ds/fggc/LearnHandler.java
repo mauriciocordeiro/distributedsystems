@@ -27,7 +27,7 @@ public class LearnHandler extends Thread {
 			
 			process.setValue(value);
 			
-			System.out.println("\t"+process.getPid()+" learns "+value+" from "+message.getProcessId());
+			System.err.println("\t"+process.getBalnum()+"-> "+process.getPid()+" learns "+value+" from "+message.getProcessId());
 			
 		} catch (Exception e) {
 			e.printStackTrace(System.err);

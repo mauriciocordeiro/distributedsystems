@@ -19,7 +19,7 @@ public class SenderUDP extends Thread {
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(100);
+			//Thread.sleep(1000);
 			byte[] buffer = message.getBytes();
 			
 			InetAddress ip = null;

@@ -29,6 +29,9 @@ public class ProposeHandler extends Thread {
 			Message msg = new Message(Message.PROPOSE_ACK, process.getPid(), process.getPort(), message.getOriginPort(), null);
 			new SenderUDP(process, msg).start();
 			
+			System.out.println("\t"+process.getBalnum()+"-> "+process.getPid()+" accepts value "+value+" from ballot "+balnum);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
